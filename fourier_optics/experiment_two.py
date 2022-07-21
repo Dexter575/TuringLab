@@ -46,6 +46,7 @@ plt.figure(figsize=(5,5))
 plt.pcolormesh(xv,yv,np.abs(U), cmap='inferno')
 plt.xlabel('X-Position [mm]')
 plt.ylabel('Y-Position [mm]')
+plt.title("Double Slit Experiment")
 plt.show()
 
 # For good observation, we can plot by looking at cross section via center line:

@@ -62,6 +62,7 @@ U = calculate_U(d,k)
 
 plt.figure(figsize=(5,5))
 plt.pcolormesh(xv,yv,np.abs(U), cmap='inferno')
+plt.title("Single Slit Experiment")
 plt.xlabel('$x$ [mm]')
 plt.ylabel('$y$ [mm]')
 plt.show()
