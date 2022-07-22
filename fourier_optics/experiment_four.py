@@ -1,3 +1,7 @@
+# Note: The diffraction pattern changes with:
+# a. increasing the z distance or
+# b. decreasing the pinhole radius size.
+
 from unicodedata import name
 from wave_length2rgb import wavelength_to_rgb
 from ctypes import util
@@ -12,14 +16,18 @@ from matplotlib import animation
 from matplotlib.animation import PillowWriter
 import pint
 
-import cv2
 u = pint.UnitRegistry() # Used for Units
 
 discrete_grid_size = np.linspace(-2,2,1600) * u.mm
 xv, yv = np.meshgrid(discrete_grid_size, discrete_grid_size)
-R = 0.05*u.mm
+R = 0.5*u.mm
 U0 = xv**2 + yv**2 < R**2
 U0 = U0.astype(float)
+
+# Spectrum:
+spectrum_size = 400
+spectrum_division = 50
+dλ = (780- 380) / spectrum_division
 
 def calculate_U(U0, wave_length, z):
     A = fft2(U0)
@@ -35,20 +43,27 @@ alpha = 0
 for idx in range(380, 750, 1):
     wavelengths.append(idx * u.nm)
 
-    #print(wavelengths[alpha])
-    U_all.append(calculate_U(U0, wave_length = wavelengths[alpha], z=6*u.cm))
+    print(wavelengths[alpha])
+    new_u = calculate_U(U0, wave_length = wavelengths[alpha], z=8*u.cm)
+    U_all.append(new_u)
     alpha = alpha + 1
-
+"""
 cmaps = [LinearSegmentedColormap.from_list('custom', 
                                          [(0,0,0),wavelength_to_rgb(wl.magnitude)],
                                          N=256) for wl in wavelengths]
+"""
 
-for index in range(len(cmaps)):
-    # Next Step: Plot Diffraction Pattern:
-    fig = plt.figure(figsize=(15, 15), dpi = 250)
-    fig.canvas.set_window_title('Visual Spectrum vs Fringes')
-    plt.pcolormesh(xv,yv, np.abs(U_all[index]), cmap=cmaps[index], vmax=np.max(np.abs(U_all[index]))/2)
-    plt.xlabel('X-Position [mm]')
-    plt.ylabel('Y-Position [mm]')
-    plt.title('$\lambda$={} nm'.format(wavelengths[index].magnitude))
-    plt.savefig('output/' + str(wavelengths[index].magnitude) + '.png')
+new_U_all = np.zeros(shape=(1600, 1600))
+for index in range(len(U_all)):
+    new_U_all = new_U_all + U_all[index]
+
+new_U_all = new_U_all / dλ
+
+# Next Step: Plot Diffraction Pattern:
+fig = plt.figure(figsize=(15, 15), dpi = 250)
+fig.canvas.set_window_title('Diffraction Pattern with White Light')
+plt.pcolormesh(xv,yv, np.abs(new_U_all), cmap='prism')
+plt.xlabel('X-Position [mm]')
+plt.ylabel('Y-Position [mm]')
+plt.title('Diffraction pattern by integral over entire wave_spectrum')
+plt.savefig('output_new/' + 'spectral.png')
