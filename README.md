@@ -1,17 +1,20 @@
 ﻿# TuringLab
 A repository for Physics based Discrete Time Simulations
 
-#Running process
+# Running process
 Activate conda in the terminal 
 
-#Install all below  modules in conda environment
+# Install all below  modules in conda environment
 pip3 install scipy
+
 pip3 install numpy
+
 pip3 install matplotlib
+
 pip3 install pint
 
-#Than run below comment for Experiment one & two 
+# Then run below comment for Experiment one & two 
 
 python3 fourier_optics/experiment_one.py
-python3 fourier_optics/experiment_two.py
 
+python3 fourier_optics/experiment_two.py
