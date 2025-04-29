@@ -61,8 +61,6 @@ The code will display the following:
 ### Original Phantom
 A synthetic CT slice used as the input image.
 
----
-
 ### Sinogram (Radon Transform)
 The simulated X-ray projections collected at angles from 0 to 180 degrees.
 
